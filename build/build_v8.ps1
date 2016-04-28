@@ -99,12 +99,16 @@ Write-Host "Testing v8..."
 cmd.exe /c python .\v8\tools\run-tests.py --buildbot --outdir build --arch $arch --mode $build_type
 Write-Host "The exit code from the tests: "$LastExitCode
 
-$destination_lib_path = [io.path]::Combine($current_location, "..", "lib", $build_type, $arch)
-if(Test-Path $destination_lib_path)
+$destination_lib_path = [io.path]::Combine($current_location, "..", "lib", $arch)
+$destination_lib_folder = [io.path]::Combine($destination_lib_path, $build_type)
+if(Test-Path $destination_lib_folder)
 {
-	Remove-Item -Recurse -Force $destination_lib_path
+	Remove-Item -Recurse -Force $destination_lib_folder
 }
-New-Item -ItemType directory -Path $destination_lib_path
+if(!(Test-Path $destination_lib_path))
+{
+	New-Item -ItemType directory -Path $destination_lib_path
+}
 
 $output_directory = [io.path]::Combine($v8_path, "build", $build_type)
 Write-Host "Copying the libraries to /lib..."
