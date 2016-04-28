@@ -1,7 +1,8 @@
 $build_type = $args[0]
 $arch = $args[1]
 $vs_version = $args[2]
-$vs_path = $args[3]
+$tag = $args[3]
+$vs_path = $args[4]
 $current_location = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $depot_tools_path = [io.path]::Combine($current_location, "depot_tools")
 $v8_path = [io.path]::Combine($depot_tools_path, "v8")
@@ -68,6 +69,13 @@ ElseIf(!(Test-Path $vs_path))
 	return
 }
 
+if(!$tag)
+{
+	$tag = "5.0.71"
+	Write-Host "The v8 engine version is set to default"
+	Write-Host "Plese check http://omahaproxy.appspot.com/ for the latest V8 versions that chrome is using"
+}
+
 $ms_builder = [io.path]::Combine($vs_path, "Common7\IDE\devenv.com")
 Set-Location $depot_tools_path
 $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
@@ -78,6 +86,16 @@ Write-Host "Cleaning the directory from previous builds..."
 $git_path = [io.path]::Combine($depot_tools_path, "git")
 cmd.exe /c $git_path clean -d -f -x
 Write-Host "The exit code from the clean command: "$LastExitCode
+Set-Location $depot_tools_path
+
+Write-Host "Synchronizing gclient..."
+cmd.exe "/c gclient sync"
+Write-Host "The exit code from synchronizing is: "$LastExitCode
+
+Set-Location $v8_path
+Write-Host "Checking out tag: "$tag
+cmd.exe ("/c git checkout " + $tag)
+Write-Host "The exit code from git checkout is: "$LastExitCode
 Set-Location $depot_tools_path
 
 Write-Host "Launching gyp..."
