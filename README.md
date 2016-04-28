@@ -12,3 +12,40 @@ It is strongly suggested that when you build and consume the library, you should
 	- Powershell (Set-ExecutionPolicy RemoteSigned)
 
 #Building from Source
+Observer that everything that is indicated with [optional] is a script argument that is not needed. Furtermore, it is recommended that the latest stable version in the chromiom project is used
+when building V8. Check out the site: http://omahaproxy.appspot.com/ .
+The visual studio version argument that you may use is the following (requires that you have that version installed!)
+	- 2010
+	- 2012
+	- 2013
+	- 2015
+The visual studio path is optional and is not required unless you have installed Visual Studio in a non-default location.
+The depot tools url is coded in the script and is normally not necessary in case you don't want to use the default location.
+The supported build types are:
+	- Release
+	- Debug
+The supported architectures are:
+	- ia32
+	-x64
+
+### Get and build everything
+
+	- Launch a powershell session and got to /build
+	- Type.\get_build_everything.ps1 <VS version[xxxx]> <V8 version[optional]> <VS path[optional]> <depot_tools url[optional]>
+	
+### Build all v8 for all platforms
+
+	- Requires that you already have installed depot_tools
+	- Launch a powershell session and got to /build
+	- Type.\build_all_platforms.ps1 <VS version[xxxx]> <VS path[optional]>
+	
+### Only build a specific configuration
+
+	- Requires that you already have installed depot_tools
+	- Launch a powershell session and got to /build
+	- Type.\build_v8.ps1 <Build type[Release, Debug]> <Architecture [ia32, x64]> <VS version[xxxx]> <VS path[optional]>
+	
+### Only get depot_tools and v8
+
+	- Launch a powershell session and got to /build
+	- Type .\get_v8 <V8 version[optional]> <depot_tools url[optional]>
