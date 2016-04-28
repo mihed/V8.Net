@@ -73,6 +73,13 @@ Set-Location $depot_tools_path
 $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
 $env:GYP_MSVS_VERSION=$vs_version
 
+Set-Location $v8_path
+Write-Host "Cleaning the directory from previous builds..."
+$git_path = [io.path]::Combine($depot_tools_path, "git")
+cmd.exe /c $git_path clean -d -f -x
+Write-Host "The exit code from the clean command: "$LastExitCode
+Set-Location $depot_tools_path
+
 Write-Host "Launching gyp..."
 cmd.exe ("/c python v8\build\gyp_v8 -Dv8_target_arch=" + $arch)
 Write-Host "The exit code from gyp is: "$LastExitCode
@@ -88,6 +95,21 @@ Write-Host "Building v8..."
 cmd.exe /c $ms_builder $solution_file /rebuild $build_type
 Write-Host "The exit code from devenv.com is: "$LastExitCode
 
+Write-Host "Testing v8..."
+cmd.exe /c python .\v8\tools\run-tests.py --buildbot --outdir build --arch $arch --mode $build_type
+Write-Host "The exit code from the tests: "$LastExitCode
+
+$destination_lib_path = [io.path]::Combine($current_location, "..", "lib", $build_type, $arch)
+if(Test-Path $destination_lib_path)
+{
+	Remove-Item -Recurse -Force $destination_lib_path
+}
+New-Item -ItemType directory -Path $destination_lib_path
+
+$output_directory = [io.path]::Combine($v8_path, "build", $build_type)
+Write-Host "Copying the libraries to /lib..."
+Copy-Item -Path $output_directory -Destination $destination_lib_path -recurse -Force
+Write-Host "Done copying"
 
 Set-Location $current_location
 
