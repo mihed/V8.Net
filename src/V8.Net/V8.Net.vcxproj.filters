@@ -44,8 +44,5 @@
     <ClCompile Include="JavaScriptContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JavaScriptContextFactoryException.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

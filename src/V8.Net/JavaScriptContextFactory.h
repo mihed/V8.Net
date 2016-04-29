@@ -17,6 +17,17 @@ namespace V8Net {
 		static JavaScriptContext^ CreateContext();
 		static void InitializeRuntime();
 		static void DestroyRuntime();
+		static property bool IsInitialized
+		{
+			bool get()
+			{
+				return _isInitialized;
+			}
+			void set(bool value)
+			{
+				_isInitialized = value;
+			}
+		}
 	};
 }
 
