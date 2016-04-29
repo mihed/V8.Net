@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using V8Net;
 
 namespace HelloWorld
 {
@@ -9,7 +10,8 @@ namespace HelloWorld
     {
         static void Main(string[] args)
         {
-
+            JavaScriptContextFactory.InitializeRuntime();
+            var context = JavaScriptContextFactory.CreateContext();
         }
     }
 }

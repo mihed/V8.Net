@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using V8Net;
@@ -132,12 +134,12 @@ namespace V8.Net.Tests
             });
         }
 
-        [ExpectedException(typeof (JavaScriptContextFactoryException))]
+        [ExpectedException(typeof(JavaScriptContextFactoryException))]
         [TestMethod]
         public void CreateContext_RuntimeNotInitialized_Throws()
         {
             Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-            JavaScriptContextFactory.CreateContext();
+            JavaScriptContextFactory.CreateContext().Dispose();
         }
 
         [TestMethod]
@@ -145,7 +147,7 @@ namespace V8.Net.Tests
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-            JavaScriptContextFactory.CreateContext();
+            JavaScriptContextFactory.CreateContext().Dispose();
         }
 
         [TestMethod]
@@ -153,8 +155,24 @@ namespace V8.Net.Tests
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
+            var threads = new Thread[1000];
             for (var i = 0; i < 1000; i++)
-                new Thread(() => { JavaScriptContextFactory.CreateContext(); }).Start();
+            {
+                threads[i] = new Thread(() =>
+                {
+                    try
+                    {
+                        JavaScriptContextFactory.CreateContext().Dispose();
+                    }
+                    catch (Exception)
+                    {
+                        Assert.Fail("The context threw an exception");
+                    }
+                });
+                threads[i].Start();
+            }
+            for (var i = 0; i < 1000; i++)
+                threads[i].Join();
         }
 
         [TestMethod]
@@ -162,7 +180,7 @@ namespace V8.Net.Tests
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-            Parallel.For(0, 1000, index => { JavaScriptContextFactory.CreateContext(); });
+            Parallel.For(0, 1000, index => { JavaScriptContextFactory.CreateContext().Dispose(); });
         }
     }
 }

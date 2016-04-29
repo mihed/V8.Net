@@ -17,6 +17,9 @@ namespace V8Net {
 		static JavaScriptContext^ CreateContext();
 		static void InitializeRuntime();
 		static void DestroyRuntime();
+
+		property static System::String^ V8Version { System::String^ get(); }
+
 		static property bool IsInitialized
 		{
 			bool get()

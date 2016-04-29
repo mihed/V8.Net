@@ -62,5 +62,9 @@ namespace V8Net {
 			Monitor::Exit(_locker);
 		}
 	}
-	
+
+	System::String^ JavaScriptContextFactory::V8Version::get()
+	{
+		return gcnew System::String(v8::V8::GetVersion());
+	}
 }
