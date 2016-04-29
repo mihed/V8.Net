@@ -4,7 +4,7 @@ using namespace System;
 
 namespace V8Net
 {
-	ref class JavaScriptContextFactoryException : Exception
+	public ref class JavaScriptContextFactoryException : Exception
 	{
 	public:
 		JavaScriptContextFactoryException(){};
