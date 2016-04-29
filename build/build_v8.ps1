@@ -99,7 +99,7 @@ Write-Host "The exit code from git checkout is: "$LastExitCode
 Set-Location $depot_tools_path
 
 Write-Host "Launching gyp..."
-cmd.exe ("/c python v8\build\gyp_v8 -Dv8_target_arch=" + $arch)
+cmd.exe ("/c python v8\build\gyp_v8 -Dcomponent=shared_library -Dv8_target_arch=" + $arch)
 Write-Host "The exit code from gyp is: "$LastExitCode
 
 $solution_file = [io.path]::Combine($v8_path, "build\All.sln")
@@ -113,9 +113,9 @@ Write-Host "Building v8..."
 cmd.exe /c $ms_builder $solution_file /rebuild $build_type
 Write-Host "The exit code from devenv.com is: "$LastExitCode
 
-Write-Host "Testing v8..."
-cmd.exe /c python .\v8\tools\run-tests.py --buildbot --outdir build --arch $arch --mode $build_type
-Write-Host "The exit code from the tests: "$LastExitCode
+#Write-Host "Testing v8..."
+#cmd.exe /c python .\v8\tools\run-tests.py --buildbot --outdir build --arch $arch --mode $build_type
+#Write-Host "The exit code from the tests: "$LastExitCode
 
 $destination_lib_path = [io.path]::Combine($current_location, "..", "lib", $arch)
 $destination_lib_folder = [io.path]::Combine($destination_lib_path, $build_type)

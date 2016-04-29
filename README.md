@@ -15,18 +15,34 @@ It is strongly suggested that when you build and consume the library, you should
 Observer that everything that is indicated with [optional] is a script argument that is not needed. Furtermore, it is recommended that the latest stable version in the chromiom project is used
 when building V8. Check out the site: http://omahaproxy.appspot.com/ .
 The visual studio version argument that you may use is the following (requires that you have that version installed!)
-	- 2010
-	- 2012
-	- 2013
-	- 2015
+
+	*2010
+	*2012
+	*2013
+	*2015
+	
 The visual studio path is optional and is not required unless you have installed Visual Studio in a non-default location.
 The depot tools url is coded in the script and is normally not necessary in case you don't want to use the default location.
 The supported build types are:
-	- Release
-	- Debug
+
+	*Release
+	*Debug
+	
 The supported architectures are:
-	- ia32
-	-x64
+
+	*ia32
+	*x64
+
+Furthermore, since we cannot dynamically link the c runtime when combining it with the CLR, you need to manually add the following shared libraries into
+the /build for the unit tests to pass (for each architecture and build configuration):
+
+	*msvcp[version].dll[d]
+	*msvcr[version].dll[d]
+	*vccorlib[version].dll[d]
+	*[architecture]/msvcp[version].dll[d]
+	*[architecture]/msvcr[version].dll[d]
+	*[architecture]/vccorlib[version].dll[d]
+	
 
 ### Get and build everything
 

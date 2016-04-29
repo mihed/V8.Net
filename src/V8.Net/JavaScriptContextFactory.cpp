@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JavaScriptContextFactory.h"
+#include "JavaScriptContextFactoryException.h"
 
 using namespace System::Threading;
 
@@ -11,7 +12,7 @@ namespace V8Net {
 		{
 			Monitor::Enter(_locker);
 			if (!_isInitialized)
-				throw gcnew Exception("The engine has not been initialized");
+				throw gcnew JavaScriptContextFactoryException("The JavaScript runtime has not been initialized");
 
 			return gcnew JavaScriptContext();
 		}
