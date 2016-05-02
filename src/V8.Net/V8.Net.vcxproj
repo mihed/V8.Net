@@ -247,6 +247,7 @@ xcopy $(SolutionDir)\lib\x64\Release\*.pdb $(SolutionDir)\build\$(Platform)\$(Co
     <ClInclude Include="InteropHelper.h" />
     <ClInclude Include="JavaScriptContextFactory.h" />
     <ClInclude Include="JavaScriptContextFactoryException.h" />
+    <ClInclude Include="JavaScriptInterop.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="JavaScriptContext.h" />
@@ -256,6 +257,7 @@ xcopy $(SolutionDir)\lib\x64\Release\*.pdb $(SolutionDir)\build\$(Platform)\$(Co
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="InteropHelper.cpp" />
     <ClCompile Include="JavaScriptContextFactory.cpp" />
+    <ClCompile Include="JavaScriptInterop.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Create</PrecompiledHeader>
