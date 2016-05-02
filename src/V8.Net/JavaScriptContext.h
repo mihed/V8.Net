@@ -11,6 +11,8 @@ namespace V8Net {
 	private:
 		ArrayBufferAllocator* _allocator;
 		v8::Isolate* _isolate;
+		v8::Persistent<v8::Context>* _context;
+		bool _isTerminating = false;
 	public:
 		JavaScriptContext();
 		~JavaScriptContext();
@@ -20,5 +22,16 @@ namespace V8Net {
 		void SetParameter(System::String^ name, System::Object^ object);
 
 		void TerminateExecution();
+
+		property bool IsTerminatingExecution {
+			bool get()
+			{
+				return _isTerminating;
+			}
+			void set(bool value)
+			{
+				_isTerminating = value;
+			}
+		}
 	};
 }

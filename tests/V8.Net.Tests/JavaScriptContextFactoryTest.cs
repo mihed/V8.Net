@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,21 +9,16 @@ namespace V8.Net.Tests
     [TestClass]
     public class JavaScriptContextFactoryTest
     {
-        [TestInitialize]
-        public void Setup()
-        {
-            JavaScriptContextFactory.DestroyRuntime();
-        }
 
         [TestMethod]
-        public void InitializeRuntime_NonInitializedRuntime_InitializedSet()
+        public void InitializeRuntime_InitializedRuntime_InitializedSet()
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
         }
 
         [TestMethod]
-        public void InitializeRuntime_NonInitializedRuntimeMultipleThreads_InitializedSet()
+        public void InitializeRuntime_InitializedRuntimeMultipleThreads_InitializedSet()
         {
             for (var i = 0; i < 1000; i++)
                 new Thread(() =>
@@ -35,7 +29,7 @@ namespace V8.Net.Tests
         }
 
         [TestMethod]
-        public void InitializeRuntime_NonInitializedRuntimeThreadPool_InitializedSet()
+        public void InitializeRuntime_InitializedRuntimeThreadPool_InitializedSet()
         {
             Parallel.For(0, 1000, index =>
             {
@@ -45,105 +39,16 @@ namespace V8.Net.Tests
         }
 
         [TestMethod]
-        public void InitializeRuntime_InitializedRuntime_NothingChanges()
+        public void InitializeRuntime_InitializedRuntimeTwoTimes_NothingChanges()
         {
             JavaScriptContextFactory.InitializeRuntime();
+            Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
         }
 
         [TestMethod]
-        public void InitializeRuntime_InitializedRuntimeMultipleThreads_NothingChanges()
-        {
-            JavaScriptContextFactory.InitializeRuntime();
-            for (var i = 0; i < 1000; i++)
-                new Thread(() =>
-                {
-                    JavaScriptContextFactory.InitializeRuntime();
-                    Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-                }).Start();
-        }
-
-        [TestMethod]
-        public void InitializeRuntime_InitializedRuntimeThreadPool_NothingChanges()
-        {
-            JavaScriptContextFactory.InitializeRuntime();
-            Parallel.For(0, 1000, index =>
-            {
-                JavaScriptContextFactory.InitializeRuntime();
-                Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-            });
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_NonInitializedRuntime_NothingChanges()
-        {
-            JavaScriptContextFactory.DestroyRuntime();
-            Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_NonInitializedRuntimeMultipleThreads_NothingChanges()
-        {
-            for (var i = 0; i < 1000; i++)
-                new Thread(() =>
-                {
-                    JavaScriptContextFactory.DestroyRuntime();
-                    Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-                }).Start();
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_NonInitializedRuntimeThreadPool_NothingChanges()
-        {
-            Parallel.For(0, 1000, index =>
-            {
-                JavaScriptContextFactory.DestroyRuntime();
-                Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-            });
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_InitializedRuntime_InitializedNotSet()
-        {
-            JavaScriptContextFactory.InitializeRuntime();
-            JavaScriptContextFactory.DestroyRuntime();
-            Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_InitializedRuntimeMultipleThreads_InitializedNotSet()
-        {
-            JavaScriptContextFactory.InitializeRuntime();
-            for (var i = 0; i < 1000; i++)
-                new Thread(() =>
-                {
-                    JavaScriptContextFactory.DestroyRuntime();
-                    Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-                }).Start();
-        }
-
-        [TestMethod]
-        public void DestroyRuntime_InitializedRuntimeThreadPool_InitializedNotSet()
-        {
-            JavaScriptContextFactory.InitializeRuntime();
-            Parallel.For(0, 1000, index =>
-            {
-                JavaScriptContextFactory.DestroyRuntime();
-                Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-            });
-        }
-
-        [ExpectedException(typeof(JavaScriptContextFactoryException))]
-        [TestMethod]
-        public void CreateContext_RuntimeNotInitialized_Throws()
-        {
-            Assert.IsFalse(JavaScriptContextFactory.IsInitialized);
-            JavaScriptContextFactory.CreateContext().Dispose();
-        }
-
-        [TestMethod]
-        public void CreateContext_RuntimeInitialized_Works()
+        public void CreateContext_SingleThread_Works()
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
@@ -155,8 +60,9 @@ namespace V8.Net.Tests
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-            var threads = new Thread[1000];
-            for (var i = 0; i < 1000; i++)
+            var threadCount = 100;
+            var threads = new Thread[threadCount];
+            for (var i = 0; i < threadCount; i++)
             {
                 threads[i] = new Thread(() =>
                 {
@@ -171,7 +77,7 @@ namespace V8.Net.Tests
                 });
                 threads[i].Start();
             }
-            for (var i = 0; i < 1000; i++)
+            for (var i = 0; i < threadCount; i++)
                 threads[i].Join();
         }
 
@@ -180,7 +86,7 @@ namespace V8.Net.Tests
         {
             JavaScriptContextFactory.InitializeRuntime();
             Assert.IsTrue(JavaScriptContextFactory.IsInitialized);
-            Parallel.For(0, 1000, index => { JavaScriptContextFactory.CreateContext().Dispose(); });
+            Parallel.For(0, 100, index => { JavaScriptContextFactory.CreateContext().Dispose(); });
         }
     }
 }

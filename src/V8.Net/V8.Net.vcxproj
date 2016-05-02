@@ -244,6 +244,7 @@ xcopy $(SolutionDir)\lib\x64\Release\*.pdb $(SolutionDir)\build\$(Platform)\$(Co
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArrayBufferAllocator.h" />
+    <ClInclude Include="InteropHelper.h" />
     <ClInclude Include="JavaScriptContextFactory.h" />
     <ClInclude Include="JavaScriptContextFactoryException.h" />
     <ClInclude Include="resource.h" />
@@ -253,6 +254,7 @@ xcopy $(SolutionDir)\lib\x64\Release\*.pdb $(SolutionDir)\build\$(Platform)\$(Co
   <ItemGroup>
     <ClCompile Include="ArrayBufferAllocator.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="InteropHelper.cpp" />
     <ClCompile Include="JavaScriptContextFactory.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

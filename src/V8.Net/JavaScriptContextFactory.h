@@ -4,15 +4,14 @@
 
 #include "JavascriptContext.h"
 
-using namespace System;
-
 namespace V8Net {
 	public ref class JavaScriptContextFactory sealed
 	{
 	private:
 		static bool _isInitialized;
+		static bool _isDestroyed;
 		static v8::Platform* _platform;
-		static initonly Object^ _locker = gcnew Object();
+		static initonly System::Object^ _locker = gcnew System::Object();
 	public:
 		static JavaScriptContext^ CreateContext();
 		static void InitializeRuntime();

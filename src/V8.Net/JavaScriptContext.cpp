@@ -11,10 +11,14 @@ namespace V8Net
 		v8::Isolate::CreateParams createParameters;
 		createParameters.array_buffer_allocator = _allocator;
 		_isolate = v8::Isolate::New(createParameters);
+		v8::Isolate::Scope isolateScope(_isolate);
+		v8::HandleScope scope(_isolate);
+		_context = new v8::Persistent<v8::Context>(_isolate, v8::Context::New(_isolate));
 	}
 
 	JavaScriptContext::~JavaScriptContext()
 	{
+		delete _context;
 		_isolate->Dispose();
 		delete _allocator;
 	}
@@ -31,7 +35,9 @@ namespace V8Net
 
 	void JavaScriptContext::TerminateExecution()
 	{
-		throw gcnew NotImplementedException();
+		_isTerminating = true;
+		v8::V8::TerminateExecution(_isolate);
+		_isTerminating = false;
 	}
 }
 
