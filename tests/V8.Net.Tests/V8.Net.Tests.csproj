@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="JavaScriptContextFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JavaScriptInteropTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\V8.Net\V8.Net.vcxproj">
